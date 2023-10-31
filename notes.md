@@ -17,3 +17,10 @@ https://pgrandinetti.github.io/compilers/page/how-to-build-a-new-programming-lan
     - 4. optimization
     - 5. code generation: optimized code translated into executable code
 
+
+Writing Your Own Programming Language
+https://scorpiosoftware.net/2023/08/18/writing-your-own-programming-language/
+
+- tokenizer
+- parser calls on tokenizer and builds AST
+- interpreter provides runtime behaviour
