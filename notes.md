@@ -24,3 +24,21 @@ https://scorpiosoftware.net/2023/08/18/writing-your-own-programming-language/
 - tokenizer
 - parser calls on tokenizer and builds AST
 - interpreter provides runtime behaviour
+
+How would I go about creating a programming language?
+https://tomassetti.me/how-to-create-programming-language/
+
+- more than just a compiler
+    - language has to be designed
+        - 2 phases: big picture, refinement
+    - compiler created
+        - parser
+        - translate to ast
+        - resolve symbols
+        - validate tree
+        - generate machine code
+        - linking of static libraries
+    - standard library implemented
+    - supporting tools like editor and build systems
+
+
