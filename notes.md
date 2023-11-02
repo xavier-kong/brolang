@@ -17,7 +17,6 @@ https://pgrandinetti.github.io/compilers/page/how-to-build-a-new-programming-lan
     - 4. optimization
     - 5. code generation: optimized code translated into executable code
 
-
 Writing Your Own Programming Language
 https://scorpiosoftware.net/2023/08/18/writing-your-own-programming-language/
 
@@ -39,6 +38,10 @@ https://tomassetti.me/how-to-create-programming-language/
         - generate machine code
         - linking of static libraries
     - standard library implemented
+        - Printing on the screen
+        - Accessing the filesystem
+        - Use network connections
+        - Creating GUIs
     - supporting tools like editor and build systems
 
 
