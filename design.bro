@@ -1,26 +1,29 @@
-let x = ([]num)shake(1, 2, 3);
-const y = "test";
+x: [num] = [1, 2, 3];
+y: const str = "test";
 
-struct person {
+shake Person { // shakes are structs
     id: num
     name: str ("")
-    addresses: []str (["sun"])
+    addresses: [str] (["sun"])
 }
 
-let y = (person)shake();
-y.id = 1;
+// should raise error since y constant
+y = "new"
 
-([]person) -> CheckIfRepeat -> (bool (false)) {
-    const personMap = ({str: bool})shake();
+z: Person = { id: 0 }; // required for initialization since no default value
+z.id = 1;
+
+([Person]) -> CheckIfRepeat -> (bool (false)) { // functions only have 1 input or output parameter, will need array or object as a parameter to have more input values
+    personMap: {str: bool} = {};
     for p in person {
         if personMap[p.name] {
             return true;
         } 
         personMap[p.name] = true;
     }
-    return true;
+    return; // false since default return value declared
 }
 
-let persons: []person = ([]person)shake([y])
-let repeats: bool = CheckIfRepeat(persons);
+persons: [Person] = [z]
+repeats: bool = CheckIfRepeat(persons);
 
