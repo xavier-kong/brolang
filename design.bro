@@ -13,15 +13,15 @@ y = "new"
 z: Person = { id: 0 }; // required for initialization since no default value
 z.id = 1;
 
-([Person]) -> CheckIfRepeat -> (bool (false)) { // functions only have 1 input or output parameter, will need array or object as a parameter to have more input values
-    personMap: {str: bool} = {};
+fc checkIfRepeat([Person]): (bool (false)) { // functions only have 1 input or output parameter, will need array or object as a parameter to have more input values
+     personMap: {str: bool} = {};
     for p in person {
         if personMap[p.name] {
             return true;
         } 
         personMap[p.name] = true;
     }
-    return; // false since default return value declared
+    return; // false since default return value declared?
 }
 
 persons: [Person] = [z]
