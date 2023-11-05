@@ -1,4 +1,4 @@
-use std::fs;
+use std::{fs, path::Path};
 
 use logos::Logos;
 
@@ -9,11 +9,11 @@ enum Token {
     #[token("shake")]
     Shake,
 
-    #[token("{")]
-    OpenCurly,
+    /* #[token("{")]*/
+    /*OpenCurly,*/
 
-    #[token("}")]
-    CloseCurly,
+    #[token("{|}")]
+    Curly,
 
     #[token(":")]
     Colon,
@@ -24,17 +24,25 @@ enum Token {
 }
 
 fn main() {
-    let open_text_res = fs::read_to_string("../design.bro");
-
-    let text = match open_text_res {
+    let text = match fs::read_to_string("./design.bro") {
         Ok(file) => file,
         Err(error) => panic!("Problem opening file {:?}", error)
     };
 
     let mut lex = Token::lexer(&text);
 
-    while lex.next().is_some() {
-        println!("{}", lex.slice());
+    let mut token = lex.next();
+
+    while token.is_some() {
+        let res = match token {
+            Some(val) => match val {
+                Ok(suc) => suc,
+                Err(e) => println!("{}", e),
+            },
+            None => ()
+        };
+        println!("{:?}", token);
+        token = lex.next();
     }
 }
 
