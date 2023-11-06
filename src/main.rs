@@ -31,18 +31,8 @@ fn main() {
 
     let mut lex = Token::lexer(&text);
 
-    let mut token = lex.next();
-
-    while token.is_some() {
-        let res = match token {
-            Some(val) => match val {
-                Ok(suc) => suc,
-                Err(e) => println!("{}", e),
-            },
-            None => ()
-        };
+    while let token = lex.next() {
         println!("{:?}", token);
-        token = lex.next();
     }
 }
 
