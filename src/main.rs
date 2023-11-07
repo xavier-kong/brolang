@@ -1,4 +1,4 @@
-use std::{fs, path::Path};
+use std::fs;
 
 use logos::Logos;
 
@@ -12,11 +12,35 @@ enum Token {
     /* #[token("{")]*/
     /*OpenCurly,*/
 
-    #[token("{|}")]
-    Curly,
+    #[token("{")]
+    OpenCurlyBracket,
+
+    #[token("}")]
+    CloseCurlyBracket,
+
+    #[token("[")]
+    OpenSquareBracket,
+
+    #[token("]")]
+    CloseSquareBracket,
+
+    #[token("(")]
+    OpenParen,
+
+    #[token(")")]
+    CloseParen,
+
+    #[token(";")]
+    SemiColon,
 
     #[token(":")]
     Colon,
+
+    #[token("=")]
+    Equals,
+
+    #[token("//")]
+    CommentBegin,
 
     // Or regular expressions.
     #[regex("[a-zA-Z]+")]
@@ -31,8 +55,17 @@ fn main() {
 
     let mut lex = Token::lexer(&text);
 
-    while let token = lex.next() {
-        println!("{:?}", token);
+    let mut token = lex.next();
+
+    while token != None  {
+        if let Some(tok) = &token {
+            match tok {
+                Ok(_) => (),
+                Err(_) => { println!("{:?} {:?}", tok, lex.slice()) }
+            }
+            ;
+        }
+        token = lex.next();
     }
 }
 
