@@ -3,32 +3,20 @@ use std::fs;
 use logos::Logos;
 
 #[derive(Logos, Debug, PartialEq)]
-#[logos(skip r"[ \t\n\f]+")] // Ignore this regex pattern between tokens
+#[logos(skip r"[ \t\f]+")] // Ignore this regex pattern between tokens
 enum Token {
     // Tokens can be literal strings, of any length.
     #[token("shake")]
     Shake,
 
-    /* #[token("{")]*/
-    /*OpenCurly,*/
+    #[regex("\\{|\\}")]
+    CurlyBracket,
 
-    #[token("{")]
-    OpenCurlyBracket,
+    #[regex("\\[|\\]")]
+    SquareBracket,
 
-    #[token("}")]
-    CloseCurlyBracket,
-
-    #[token("[")]
-    OpenSquareBracket,
-
-    #[token("]")]
-    CloseSquareBracket,
-
-    #[token("(")]
-    OpenParen,
-
-    #[token(")")]
-    CloseParen,
+    #[regex("\\(|\\)")]
+    Paren,
 
     #[token(";")]
     SemiColon,
@@ -42,9 +30,51 @@ enum Token {
     #[token("//")]
     CommentBegin,
 
+    #[token("\n")]
+    Linebreak,
+
+    #[token("\"")]
+    DoubleQuote,
+
+    #[regex("[0-9]+")]
+    Number,
+
+    #[token("-")]
+    Minus,
+
+    #[token("+")]
+    Plus,
+
+    #[token(",")]
+    Comma,
+
+    #[token(".")]
+    Period,
+
+    #[token("True")]
+    True,
+
+    #[token("False")]
+    False,
+
+    #[token("bool")]
+    TypeBoolean,
+
+    #[token("str")]
+    TypeString,
+
+    #[token("num")]
+    TypeNumber,
+
     // Or regular expressions.
     #[regex("[a-zA-Z]+")]
     Text,
+
+    #[token("fc")]
+    FunctionDeclaration,
+
+    #[token("const")]
+    Constant
 }
 
 fn main() {
@@ -55,13 +85,15 @@ fn main() {
 
     let mut lex = Token::lexer(&text);
 
+    println!("{:?}", lex);
+
     let mut token = lex.next();
 
     while token != None  {
         if let Some(tok) = &token {
             match tok {
-                Ok(_) => (),
-                Err(_) => { println!("{:?} {:?}", tok, lex.slice()) }
+                Ok(val) => { println!("TOK {:?} {:?}", val, lex.slice()) },
+                Err(_) => { println!("ERROR {:?} {:?}", tok, lex.slice()) }
             }
             ;
         }

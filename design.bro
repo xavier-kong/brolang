@@ -1,4 +1,4 @@
-x: [num] = [1, 2, 3];
+x: [num] = [-1, 2, 3];
 y: const str = "test";
 
 shake Person { // shakes are structs
@@ -11,9 +11,9 @@ shake Person { // shakes are structs
 y = "new"
 
 z: Person = { id: 0 }; // required for initialization since no default value
-z.id = 1;
+z.id = 897897;
 
-fc checkIfRepeat([Person]): (bool (false)) { // functions only have 1 input or output parameter, will need array or object as a parameter to have more input values
+fc checkIfRepeat([Person]): bool (false) { // functions only have 1 input or output parameter, will need array or object as a parameter to have more input values
      personMap: {str: bool} = {};
     for p in person {
         if personMap[p.name] {
@@ -21,9 +21,8 @@ fc checkIfRepeat([Person]): (bool (false)) { // functions only have 1 input or o
         } 
         personMap[p.name] = true;
     }
-    return; // false since default return value declared?
+    return; // false since default return value declared
 }
 
 persons: [Person] = [z]
-repeats: bool = CheckIfRepeat(persons);
-
+repeats: bool = checkIfRepeat(persons);
