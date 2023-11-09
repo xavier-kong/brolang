@@ -1,4 +1,4 @@
-x: [num] = [-1, 2, 3];
+x: [num(-1, 4)] = [-1, 2, 3];
 y: const str = "test";
 
 shake Person { // shakes are structs
