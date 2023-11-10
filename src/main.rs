@@ -1,6 +1,6 @@
-use std::fs;
+use std::{fs, any::{self, Any}};
 
-use logos::Logos;
+use logos::{Logos, Lexer};
 
 #[derive(Logos, Debug, PartialEq)]
 #[logos(skip r"[ \t\f]+")] // Ignore this regex pattern between tokens
@@ -45,6 +45,12 @@ enum Token {
     #[token("+")]
     Plus,
 
+    #[token("*")]
+    Multiply,
+
+    #[token("/")]
+    Divide,
+
     #[token(",")]
     Comma,
 
@@ -77,28 +83,25 @@ enum Token {
     Constant
 }
 
+struct Node {
+    data: Token,
+    left: Option<Box<Node>>,
+    right: Option<Box<Node>>,
+    next: Option<Box<Node>>
+}
+
+fn program(lex: Lexer<'_, Token>) -> &Node {
+
+}
+
 fn main() {
     let text = match fs::read_to_string("./design.bro") {
         Ok(file) => file,
         Err(error) => panic!("Problem opening file {:?}", error)
     };
 
-    let mut lex = Token::lexer(&text);
-
-    println!("{:?}", lex);
-
-    let mut token = lex.next();
-
-    while token != None  {
-        if let Some(tok) = &token {
-            match tok {
-                Ok(val) => { println!("TOK {:?} {:?}", val, lex.slice()) },
-                Err(_) => { println!("ERROR {:?} {:?}", tok, lex.slice()) }
-            }
-            ;
-        }
-        token = lex.next();
-    }
+    let lex = Token::lexer(&text);
+    let root = program(lex);
 }
 
 
