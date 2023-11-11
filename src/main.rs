@@ -90,7 +90,20 @@ struct Node {
     next: Option<Box<Node>>
 }
 
+fn get_token(mut lex: Lexer<'_, Token>) -> Token {
+    let curr = match lex.next() {
+        Some(val) => val,
+        None => panic!("panicking!")
+    };
+    let token = match curr {
+        Ok(val) => val,
+        Err(e) => panic!("{:?}", e)
+    };
+    return token;
+}
+
 fn program(lex: Lexer<'_, Token>) -> &Node {
+    let token = get_token(lex);
 
 }
 
