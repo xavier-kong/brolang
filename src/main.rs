@@ -80,17 +80,24 @@ enum Token {
     FunctionDeclaration,
 
     #[token("const")]
-    Constant
+    Constant,
+
+    Program
 }
 
 struct Node {
-    data: Token,
-    left: Option<Box<Node>>,
-    right: Option<Box<Node>>,
-    next: Option<Box<Node>>
+    data: TokenData,
+    left: Option<Box<*mut Node>>,
+    right: Option<Box<*mut Node>>,
+    next: Option<Box<*mut Node>>
 }
 
-fn get_token(mut lex: Lexer<'_, Token>) -> Token {
+struct TokenData {
+    token: Token,
+    slice: String
+}
+
+fn get_token(mut lex: Lexer<'_, Token>) -> TokenData {
     let curr = match lex.next() {
         Some(val) => val,
         None => panic!("panicking!")
@@ -99,12 +106,39 @@ fn get_token(mut lex: Lexer<'_, Token>) -> Token {
         Ok(val) => val,
         Err(e) => panic!("{:?}", e)
     };
-    return token;
+
+    return TokenData {
+        token,
+        slice: lex.slice().to_string()
+    };
+}
+
+fn parse_variable(token_data: TokenData, lex: Lexer<'_, Token>) -> &Node {
+
 }
 
 fn program(lex: Lexer<'_, Token>) -> &Node {
-    let token = get_token(lex);
+    let token_data = get_token(lex);
 
+    let node_token_data = TokenData {
+        token: Token::Program,
+        slice: "".to_string()
+    };
+
+    let node = Node {
+        data: node_token_data,
+        left: None,
+        right: None,
+        next: None
+    };
+
+    if token_data.token == Token::Text {
+        node.next = parse_variable(token_data, lex);
+    } else {
+        panic!("unsupported character. only variables supported for now");
+    }
+
+    return &node;
 }
 
 fn main() {
