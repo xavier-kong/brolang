@@ -114,7 +114,28 @@ fn get_token(mut lex: Lexer<'_, Token>) -> TokenData {
 }
 
 fn parse_variable(token_data: TokenData, lex: Lexer<'_, Token>) -> &Node {
+    let node = Node {
+        data: token_data,
+        left: None,
+        right: None,
+        next: None
+    };
 
+    let first_char = token_data.slice.chars().next().unwrap();
+
+    if first_char.is_uppercase() {
+        panic!("uppercase is not allowed for a variable");
+    }
+
+    let next_token_data = get_token(lex);
+
+    if next_token_data.token == Token::Equals {
+        node.next = parse_equals(next_token_data, lex);
+    } else {
+        panic!("next char is not equals!");
+    }
+
+    return &node;
 }
 
 fn program(lex: Lexer<'_, Token>) -> &Node {
