@@ -87,9 +87,9 @@ enum Token {
 
 struct Node {
     data: TokenData,
-    left: Option<Box<*mut Node>>,
-    right: Option<Box<*mut Node>>,
-    next: Option<Box<*mut Node>>
+    left: Option<Box<Node>>,
+    right: Option<Box<Node>>,
+    next: Option<Box<Node>>
 }
 
 struct TokenData {
@@ -113,6 +113,17 @@ fn get_token(mut lex: Lexer<'_, Token>) -> TokenData {
     };
 }
 
+fn parse_equals(token_data: TokenData, lex: Lexer<'_, Token>) -> &Node {
+    let node = Node {
+        data: token_data,
+        left: None,
+        right: None,
+        next: None
+    };
+
+    return &node;
+}
+
 fn parse_variable(token_data: TokenData, lex: Lexer<'_, Token>) -> &Node {
     let node = Node {
         data: token_data,
@@ -129,13 +140,16 @@ fn parse_variable(token_data: TokenData, lex: Lexer<'_, Token>) -> &Node {
 
     let next_token_data = get_token(lex);
 
-    if next_token_data.token == Token::Equals {
-        node.next = parse_equals(next_token_data, lex);
-    } else {
+    if next_token_data.token != Token::Equals {
+
         panic!("next char is not equals!");
     }
 
-    return &node;
+    let equals_node = parse_equals(next_token_data, lex);
+
+    equals_node.left = Some(Box::new(node));
+
+    return &equals_node;
 }
 
 fn program(lex: Lexer<'_, Token>) -> &Node {
@@ -154,7 +168,10 @@ fn program(lex: Lexer<'_, Token>) -> &Node {
     };
 
     if token_data.token == Token::Text {
-        node.next = parse_variable(token_data, lex);
+        let next_node = parse_variable(token_data, lex);
+
+        node.next = Some(Box::new(next_node));
+
     } else {
         panic!("unsupported character. only variables supported for now");
     }
