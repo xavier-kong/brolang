@@ -113,7 +113,15 @@ fn get_token(mut lex: Lexer<'_, Token>) -> TokenData {
     };
 }
 
-fn parse_equals(token_data: TokenData, lex: Lexer<'_, Token>) -> &Node {
+fn parse_minus(token_data: TokenData, lex: Lexer<'_, Token>) -> Node {
+
+}
+
+fn parse_number(token_data: TokenData, lex: Lexer<'_, Token>) -> Node {
+
+}
+
+fn parse_equals(token_data: TokenData, lex: Lexer<'_, Token>) -> Node {
     let node = Node {
         data: token_data,
         left: None,
@@ -121,10 +129,20 @@ fn parse_equals(token_data: TokenData, lex: Lexer<'_, Token>) -> &Node {
         next: None
     };
 
-    return &node;
+    let next_token_data = get_token(lex);
+
+    if next_token_data.token == Token::Minus {
+        let minus_node = parse_minus(next_token_data, lex);
+        node.right = Some(Box::new(minus_node));
+    } else if next_token_data.token == Token::Number {
+        let number_node = parse_number(next_token_data, lex);
+        node.right = Some(Box::new(number_node));
+    }
+
+    return node;
 }
 
-fn parse_variable(token_data: TokenData, lex: Lexer<'_, Token>) -> &Node {
+fn parse_variable(token_data: TokenData, lex: Lexer<'_, Token>) -> Node {
     let node = Node {
         data: token_data,
         left: None,
@@ -145,11 +163,11 @@ fn parse_variable(token_data: TokenData, lex: Lexer<'_, Token>) -> &Node {
         panic!("next char is not equals!");
     }
 
-    let equals_node = parse_equals(next_token_data, lex);
+    let mut equals_node = parse_equals(next_token_data, lex);
 
     equals_node.left = Some(Box::new(node));
 
-    return &equals_node;
+    return equals_node;
 }
 
 fn program(lex: Lexer<'_, Token>) -> &Node {
@@ -160,7 +178,7 @@ fn program(lex: Lexer<'_, Token>) -> &Node {
         slice: "".to_string()
     };
 
-    let node = Node {
+    let mut node = Node {
         data: node_token_data,
         left: None,
         right: None,

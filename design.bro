@@ -7,6 +7,8 @@ shake Person { // shakes are structs
     addresses: [str] (["sun"])
 }
 
+type Fruits = r('') // regex types!!
+
 // should raise error since y constant
 y = "new"
 
