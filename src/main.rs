@@ -113,21 +113,52 @@ fn get_token(mut lex: Lexer<'_, Token>) -> TokenData {
     };
 }
 
-fn parse_minus(token_data: TokenData, lex: Lexer<'_, Token>) -> Node {
-
-}
-
-fn parse_number(token_data: TokenData, lex: Lexer<'_, Token>) -> Node {
-
-}
-
-fn parse_equals(token_data: TokenData, lex: Lexer<'_, Token>) -> Node {
+fn create_new_node(token_data: TokenData) -> Node {
     let node = Node {
         data: token_data,
         left: None,
         right: None,
         next: None
     };
+
+    return node;
+}
+
+fn parse_minus(token_data: TokenData, lex: Lexer<'_, Token>) -> Node {
+    let mut node = create_new_node(token_data);
+
+    let next_token_data = get_token(lex);
+
+    if next_token_data.token == Token::Number {
+        let number_node = parse_number(next_token_data, lex);
+        node.right = Some(Box::new(number_node));
+    } else {
+        panic!("current invalid input for after minus");
+    }
+
+    return node;
+}
+
+fn parse_number(token_data: TokenData, lex: Lexer<'_, Token>) -> Node {
+    let mut node = create_new_node(token_data);
+
+    let next_token_data = get_token(lex);
+
+    let node_to_return = match next_token_data.token {
+        Token::Minus => parse_minus(next_token_data, lex),
+        Token::Plus => parse_plus(next_token_data, lex),
+        Token::Divide => parse_divide(next_token_data, lex),
+        Token::Multiply => parse_multiply(next_token_data, lex),
+        _ => panic!("invalid input for parse number")
+    };
+
+    node_to_return.left = Some(Box::new(node));
+
+    return node_to_return;
+}
+
+fn parse_equals(token_data: TokenData, lex: Lexer<'_, Token>) -> Node {
+    let mut node = create_new_node(token_data);
 
     let next_token_data = get_token(lex);
 
@@ -143,12 +174,7 @@ fn parse_equals(token_data: TokenData, lex: Lexer<'_, Token>) -> Node {
 }
 
 fn parse_variable(token_data: TokenData, lex: Lexer<'_, Token>) -> Node {
-    let node = Node {
-        data: token_data,
-        left: None,
-        right: None,
-        next: None
-    };
+    let node = create_new_node(token_data);
 
     let first_char = token_data.slice.chars().next().unwrap();
 
@@ -178,12 +204,7 @@ fn program(lex: Lexer<'_, Token>) -> &Node {
         slice: "".to_string()
     };
 
-    let mut node = Node {
-        data: node_token_data,
-        left: None,
-        right: None,
-        next: None
-    };
+    let mut node = create_new_node(node_token_data);
 
     if token_data.token == Token::Text {
         let next_node = parse_variable(token_data, lex);
