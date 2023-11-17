@@ -97,11 +97,12 @@ struct TokenData {
     slice: String
 }
 
-fn get_token(mut lex: Lexer<'_, Token>) -> TokenData {
+fn get_token(lex: Lexer<'_, Token>) -> TokenData {
     let curr = match lex.next() {
         Some(val) => val,
         None => panic!("panicking!")
     };
+
     let token = match curr {
         Ok(val) => val,
         Err(e) => panic!("{:?}", e)
@@ -139,12 +140,57 @@ fn parse_minus(token_data: TokenData, lex: Lexer<'_, Token>) -> Node {
     return node;
 }
 
+fn parse_plus(token_data: TokenData, lex: Lexer<'_, Token>) -> Node {
+    let mut node = create_new_node(token_data);
+
+    let next_token_data = get_token(lex);
+
+    if next_token_data.token == Token::Number {
+        let number_node = parse_number(next_token_data, lex);
+        node.right = Some(Box::new(number_node));
+    } else {
+        panic!("current invalid input for after plus");
+    }
+
+    return node;
+}
+
+fn parse_divide(token_data: TokenData, lex: Lexer<'_, Token>) -> Node {
+    let mut node = create_new_node(token_data);
+
+    let next_token_data = get_token(lex);
+
+    if next_token_data.token == Token::Number {
+        let number_node = parse_number(next_token_data, lex);
+        node.right = Some(Box::new(number_node));
+    } else {
+        panic!("current invalid input for after divide");
+    }
+
+    return node;
+}
+
+fn parse_multiply(token_data: TokenData, lex: Lexer<'_, Token>) -> Node {
+    let mut node = create_new_node(token_data);
+
+    let next_token_data = get_token(lex);
+
+    if next_token_data.token == Token::Number {
+        let number_node = parse_number(next_token_data, lex);
+        node.right = Some(Box::new(number_node));
+    } else {
+        panic!("current invalid input for after multiply");
+    }
+
+    return node;
+}
+
 fn parse_number(token_data: TokenData, lex: Lexer<'_, Token>) -> Node {
     let mut node = create_new_node(token_data);
 
     let next_token_data = get_token(lex);
 
-    let node_to_return = match next_token_data.token {
+    let mut node_to_return = match next_token_data.token {
         Token::Minus => parse_minus(next_token_data, lex),
         Token::Plus => parse_plus(next_token_data, lex),
         Token::Divide => parse_divide(next_token_data, lex),
@@ -196,7 +242,7 @@ fn parse_variable(token_data: TokenData, lex: Lexer<'_, Token>) -> Node {
     return equals_node;
 }
 
-fn program(lex: Lexer<'_, Token>) -> &Node {
+fn program(lex: Lexer<'_, Token>) -> Node {
     let token_data = get_token(lex);
 
     let node_token_data = TokenData {
@@ -215,7 +261,7 @@ fn program(lex: Lexer<'_, Token>) -> &Node {
         panic!("unsupported character. only variables supported for now");
     }
 
-    return &node;
+    return node;
 }
 
 fn main() {
