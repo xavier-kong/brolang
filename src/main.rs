@@ -92,12 +92,13 @@ struct Node {
     next: Option<Box<Node>>
 }
 
+#[derive(Clone)]
 struct TokenData {
     token: Token,
     slice: String
 }
 
-fn get_token(lex: Lexer<'_, Token>) -> TokenData {
+fn get_token(lex: &Lexer<'_, Token>) -> TokenData {
     let curr = match lex.next() {
         Some(val) => val,
         None => panic!("panicking!")
@@ -128,7 +129,7 @@ fn create_new_node(token_data: TokenData) -> Node {
 fn parse_minus(token_data: TokenData, lex: Lexer<'_, Token>) -> Node {
     let mut node = create_new_node(token_data);
 
-    let next_token_data = get_token(lex);
+    let next_token_data = get_token(&lex);
 
     if next_token_data.token == Token::Number {
         let number_node = parse_number(next_token_data, lex);
@@ -143,7 +144,7 @@ fn parse_minus(token_data: TokenData, lex: Lexer<'_, Token>) -> Node {
 fn parse_plus(token_data: TokenData, lex: Lexer<'_, Token>) -> Node {
     let mut node = create_new_node(token_data);
 
-    let next_token_data = get_token(lex);
+    let next_token_data = get_token(&lex);
 
     if next_token_data.token == Token::Number {
         let number_node = parse_number(next_token_data, lex);
@@ -158,7 +159,7 @@ fn parse_plus(token_data: TokenData, lex: Lexer<'_, Token>) -> Node {
 fn parse_divide(token_data: TokenData, lex: Lexer<'_, Token>) -> Node {
     let mut node = create_new_node(token_data);
 
-    let next_token_data = get_token(lex);
+    let next_token_data = get_token(&lex);
 
     if next_token_data.token == Token::Number {
         let number_node = parse_number(next_token_data, lex);
@@ -173,7 +174,7 @@ fn parse_divide(token_data: TokenData, lex: Lexer<'_, Token>) -> Node {
 fn parse_multiply(token_data: TokenData, lex: Lexer<'_, Token>) -> Node {
     let mut node = create_new_node(token_data);
 
-    let next_token_data = get_token(lex);
+    let next_token_data = get_token(&lex);
 
     if next_token_data.token == Token::Number {
         let number_node = parse_number(next_token_data, lex);
@@ -188,7 +189,7 @@ fn parse_multiply(token_data: TokenData, lex: Lexer<'_, Token>) -> Node {
 fn parse_number(token_data: TokenData, lex: Lexer<'_, Token>) -> Node {
     let mut node = create_new_node(token_data);
 
-    let next_token_data = get_token(lex);
+    let next_token_data = get_token(&lex);
 
     let mut node_to_return = match next_token_data.token {
         Token::Minus => parse_minus(next_token_data, lex),
@@ -206,7 +207,7 @@ fn parse_number(token_data: TokenData, lex: Lexer<'_, Token>) -> Node {
 fn parse_equals(token_data: TokenData, lex: Lexer<'_, Token>) -> Node {
     let mut node = create_new_node(token_data);
 
-    let next_token_data = get_token(lex);
+    let next_token_data = get_token(&lex);
 
     if next_token_data.token == Token::Minus {
         let minus_node = parse_minus(next_token_data, lex);
@@ -219,8 +220,8 @@ fn parse_equals(token_data: TokenData, lex: Lexer<'_, Token>) -> Node {
     return node;
 }
 
-fn parse_variable(token_data: TokenData, lex: Lexer<'_, Token>) -> Node {
-    let node = create_new_node(token_data);
+fn parse_variable(token_data: &TokenData, lex: Lexer<'_, Token>) -> Node {
+    let node = create_new_node(*token_data);
 
     let first_char = token_data.slice.chars().next().unwrap();
 
@@ -228,7 +229,7 @@ fn parse_variable(token_data: TokenData, lex: Lexer<'_, Token>) -> Node {
         panic!("uppercase is not allowed for a variable");
     }
 
-    let next_token_data = get_token(lex);
+    let next_token_data = get_token(&lex);
 
     if next_token_data.token != Token::Equals {
 
@@ -243,7 +244,7 @@ fn parse_variable(token_data: TokenData, lex: Lexer<'_, Token>) -> Node {
 }
 
 fn program(lex: Lexer<'_, Token>) -> Node {
-    let token_data = get_token(lex);
+    let token_data = get_token(&lex);
 
     let node_token_data = TokenData {
         token: Token::Program,
@@ -253,7 +254,7 @@ fn program(lex: Lexer<'_, Token>) -> Node {
     let mut node = create_new_node(node_token_data);
 
     if token_data.token == Token::Text {
-        let next_node = parse_variable(token_data, lex);
+        let next_node = parse_variable(&token_data, lex);
 
         node.next = Some(Box::new(next_node));
 
