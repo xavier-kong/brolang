@@ -92,13 +92,12 @@ struct Node {
     next: Option<Box<Node>>
 }
 
-#[derive(Clone)]
 struct TokenData {
     token: Token,
     slice: String
 }
 
-fn get_token(lex: &Lexer<'_, Token>) -> TokenData {
+fn get_token(lex: &mut Lexer<'_, Token>) -> TokenData {
     let curr = match lex.next() {
         Some(val) => val,
         None => panic!("panicking!")
@@ -243,7 +242,7 @@ fn parse_variable(token_data: &TokenData, lex: Lexer<'_, Token>) -> Node {
     return equals_node;
 }
 
-fn program(lex: Lexer<'_, Token>) -> Node {
+fn program(lex: & mut Lexer<'_, Token>) -> Node {
     let token_data = get_token(&lex);
 
     let node_token_data = TokenData {
@@ -266,13 +265,13 @@ fn program(lex: Lexer<'_, Token>) -> Node {
 }
 
 fn main() {
-    let text = match fs::read_to_string("./design.bro") {
+    let text = match fs::read_to_string("./test.bro") {
         Ok(file) => file,
         Err(error) => panic!("Problem opening file {:?}", error)
     };
 
-    let lex = Token::lexer(&text);
-    let root = program(lex);
+    let mut lex = Token::lexer(&text);
+    let root = program(&lex);
 }
 
 
