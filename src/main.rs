@@ -2,6 +2,8 @@ use std::{fs, any::{self, Any}};
 
 use logos::{Logos, Lexer};
 
+mod traverse;
+
 #[derive(Logos, Debug, PartialEq)]
 #[logos(skip r"[ \t\f]+")] // Ignore this regex pattern between tokens
 enum Token {
@@ -85,13 +87,15 @@ enum Token {
     Program
 }
 
-struct Node {
+#[derive(Debug)]
+pub struct Node {
     data: TokenData,
     left: Option<Box<Node>>,
     right: Option<Box<Node>>,
     next: Option<Box<Node>>
 }
 
+#[derive(Debug)]
 struct TokenData {
     token: Token,
     slice: String
@@ -185,6 +189,12 @@ fn parse_multiply(token_data: TokenData, lex: & mut Lexer<'_, Token>) -> Node {
     return node;
 }
 
+fn parse_semi(token_data: TokenData, lex: & mut Lexer<'_, Token>) -> Node {
+    let node = create_new_node(token_data);
+
+    return node;
+}
+
 fn parse_number(token_data: TokenData, lex: & mut Lexer<'_, Token>) -> Node {
     let node = create_new_node(token_data);
 
@@ -195,7 +205,8 @@ fn parse_number(token_data: TokenData, lex: & mut Lexer<'_, Token>) -> Node {
         Token::Plus => parse_plus(next_token_data, lex),
         Token::Divide => parse_divide(next_token_data, lex),
         Token::Multiply => parse_multiply(next_token_data, lex),
-        _ => panic!("invalid input for parse number")
+        Token::SemiColon => parse_semi(next_token_data, lex),
+        _ => panic!("invalid input for parse number: {}", next_token_data.slice)
     };
 
     node_to_return.left = Some(Box::new(node));
@@ -270,6 +281,7 @@ fn main() {
 
     let mut lex = Token::lexer(&text);
     let root = program(&mut lex);
+    traverse::traverse(root);
 }
 
 
