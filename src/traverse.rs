@@ -11,10 +11,17 @@ pub fn traverse(node: Node) {
         for (i, n) in nodes.iter().enumerate() {
             println!("{:?}", n);
             if n.left.is_some() {
-                new_nodes.push(n.left);
+                match n.left {
+                    Some(val) => new_nodes.push(*val),
+                    None => ()
+                }
             }
-            new_nodes.push(n.left);
-            new_nodes.push(n.right);
+            if n.right.is_some()  {
+                match n.right {
+                    Some(val) => new_nodes.push(*val),
+                    None => ()
+                }
+            }
         }
     }
 }
