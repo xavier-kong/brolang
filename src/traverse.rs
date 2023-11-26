@@ -11,11 +11,8 @@ pub fn traverse(node: Node) {
         for (_i, n) in nodes.iter().enumerate() {
             println!("{:?}", n);
 
-            let curr = n;
-
-            let val = match curr {
+            match n {
                 Some(val) => {
-                    return val;
                     new_nodes.push(val.left);
                     new_nodes.push(val.right);
                 },
