@@ -1,8 +1,6 @@
-use std::{fs, any::{self, Any}};
+use std::fs;
 
 use logos::{Logos, Lexer};
-
-mod traverse;
 
 #[derive(Logos, Debug, PartialEq)]
 #[logos(skip r"[ \t\f]+")] // Ignore this regex pattern between tokens
@@ -281,7 +279,7 @@ fn main() {
 
     let mut lex = Token::lexer(&text);
     let root = program(&mut lex);
-    traverse::traverse(root);
+    println!("{:#?}", root);
 }
 
 
