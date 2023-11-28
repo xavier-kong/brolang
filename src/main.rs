@@ -11,8 +11,7 @@ enum Token {
 
     #[regex("\\{|\\}")]
     CurlyBracket,
-
-    #[regex("\\[|\\]")]
+#[regex("\\[|\\]")]
     SquareBracket,
 
     #[regex("\\(|\\)")]
