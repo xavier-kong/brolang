@@ -1,5 +1,7 @@
 use std::fs;
 
+mod action;
+
 use logos::{Logos, Lexer};
 
 #[derive(Logos, Debug, PartialEq)]
@@ -11,7 +13,7 @@ enum Token {
 
     #[regex("\\{|\\}")]
     CurlyBracket,
-#[regex("\\[|\\]")]
+    #[regex("\\[|\\]")]
     SquareBracket,
 
     #[regex("\\(|\\)")]
@@ -278,6 +280,7 @@ fn main() {
 
     let mut lex = Token::lexer(&text);
     let root = program(&mut lex);
+    action::parse(&root);
     println!("{:#?}", root);
 }
 

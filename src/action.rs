@@ -1,3 +1,5 @@
+use crate::Node;
+
 enum OperationType {
     Equals,
     Add
@@ -10,8 +12,12 @@ enum ReturnType {
 }
 
 struct ActionTreeNode {
-    OperationType: OperationType,
-    ReturnType: ReturnType,
-    ArgLeft: Option<Box<ActionTreeNode>>,
-    ArgRight: Option<Box<ActionTreeNode>>,
+    operation_type: OperationType,
+    return_type: ReturnType,
+    arg_left: Option<Box<ActionTreeNode>>,
+    arg_right: Option<Box<ActionTreeNode>>,
+}
+
+pub fn parse(node: &Node) {
+    println!("{:?}", node);
 }
