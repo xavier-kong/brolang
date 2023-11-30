@@ -1,4 +1,4 @@
-use crate::Node;
+use crate::{Node, Token};
 
 enum OperationType {
     Equals,
@@ -18,6 +18,10 @@ struct ActionTreeNode {
     arg_right: Option<Box<ActionTreeNode>>,
 }
 
-pub fn parse(node: &Node) {
+pub fn parse(node: &Node) -> ActionTreeNode {
+    let curr_node = *node;
+
+
+
     println!("{:?}", node);
 }

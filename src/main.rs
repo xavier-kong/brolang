@@ -280,7 +280,7 @@ fn main() {
 
     let mut lex = Token::lexer(&text);
     let root = program(&mut lex);
-    action::parse(&root);
+    let ast_root = action::parse(&root);
     println!("{:#?}", root);
 }
 
